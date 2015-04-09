@@ -52,7 +52,7 @@ public class Temp extends HttpServlet {
 			} 
   	  Connection con;
 	try {
-		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/courses","root","nelly123");
+		con = DriverManager.getConnection("jdbc:mysql://localhost:3306/courses","root","password");
 	    System.out.println("Database Connection Established");
 	    if(!con.isClosed())
 	         System.out.println("Successfully connected to " + "MySQL server using TCP/IP...");

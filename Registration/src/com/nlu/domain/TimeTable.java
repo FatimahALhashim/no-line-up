@@ -1,30 +1,29 @@
 package com.nlu.domain;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import com.mysql.jdbc.PreparedStatement;
-import com.nlu.model.TimeTableModel;
+
+import com.nlu.model.CourseModel;
 import com.nlu.connector.Connector;
 
 public class TimeTable {
-	
+
 	Connection con = null;
 
 	public LinkedList<Object> getTypes(String stuID) {
 
-		String query = "SELECT CourseCode FROM Timetable WHERE Student_Id LIKE'%"
-				+ stuID + "%'";
-
+		CourseModel cm = new CourseModel();
 		LinkedList<Object> llist = new LinkedList<Object>();
 		ResultSet rs = null;
 		PreparedStatement ps = null;
-		TimeTableModel ttm = new TimeTableModel();
 
 		con = Connector.getConnection();
 		try {
-			ps = (PreparedStatement) con.prepareStatement(query);
+			ps = con.prepareStatement("SELECT * FROM TimeTable_Database WHERE Student_Id LIKE'%"
+					+ stuID + "%'");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -38,15 +37,21 @@ public class TimeTable {
 
 		try {
 			while (rs.next()) {
-				ttm.setCourseCode(rs.getString("CourseCode"));
 
-				llist.add(ttm);
+				cm.setCourseCode(rs.getString("CourseCode"));
+				cm.setCourseName(rs.getString("CourseName"));
+				cm.setProfessor(rs.getString("Professor"));
+				cm.setRoom(rs.getString("Room"));
+				cm.setTimeSlot(rs.getString("TimeSlot"));
+				cm.setDaySlot(rs.getString("DaySlot"));
+
+				llist.add(cm);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		try {
 			rs.close();
 		} catch (SQLException e) {
@@ -59,7 +64,6 @@ public class TimeTable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 		return llist;
 	}
